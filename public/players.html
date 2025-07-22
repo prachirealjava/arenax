@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="kuchModule" ng-controller="kuchController">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Players</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+  <style>
+    .align-left-bold-heading {
+      text-align: left;
+      font-weight: bold;
+    }
+  </style>
+
+  <script>
+    var mymodule = angular.module("kuchModule", []);
+
+    mymodule.controller("kuchController", function ($scope, $http) {
+      $scope.players = [];
+
+      $scope.fetchPlayers = function () {
+        var url = "/fetch-all-players";
+        $http.get(url).then(function (response) {
+          $scope.players = response.data;
+        }, function (error) {
+          alert(JSON.stringify(error.data));
+        });
+      };
+
+      $scope.onePlayer = {};
+      $scope.showDetails = function (index) {
+        $scope.onePlayer = $scope.players[index];
+      };
+
+      $scope.doDelete = function (emailid) {
+        let url = "/delete-player?emailid=" + encodeURIComponent(emailid);
+        $http.get(url).then(function (response) {
+          alert(response.data);
+          $scope.fetchPlayers();
+        }, function (response) {
+          alert(JSON.stringify(response.data));
+        });
+      };
+    });
+  </script>
+</head>
+
+<body>
+  <center>
+    <h2 class="mt-3">Manage Player Profiles</h2>
+    <button class="btn btn-primary m-3" ng-click="fetchPlayers();">Fetch All Players</button>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-3 p-3 mb-2" ng-repeat="obj in players">
+          <div class="card h-100">
+            <img class="card-img-top" ng-src="{{obj.profilepicurl}}" alt="Profile Pic" style="height: 150px; object-fit: cover;">
+            <div class="card-body">
+              <h5 class="card-title">{{obj.name}}</h5>
+              <p class="card-text">Email: {{obj.emailid}}</p>
+              <p class="card-text">Game: {{obj.game}}</p>
+              <p class="card-text">City: {{obj.address}}</p>
+              <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal" ng-click="showDetails($index);">Details</a>
+            </div>
+            <div class="card-footer text-center">
+              <button class="btn btn-danger btn-sm" ng-click="doDelete(obj.emailid);">Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </center>
+
+  <!-- Modal -->
+  <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Player Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <p class="align-left-bold-heading">Email: {{onePlayer.emailid}}</p>
+          <p class="align-left-bold-heading">Name: {{onePlayer.name}}</p>
+          <p class="align-left-bold-heading">DOB: {{onePlayer.dob}}</p>
+          <p class="align-left-bold-heading">Gender: {{onePlayer.gender}}</p>
+          <p class="align-left-bold-heading">Contact: {{onePlayer.contact}}</p>
+          <p class="align-left-bold-heading">Game: {{onePlayer.game}}</p>
+          <p class="align-left-bold-heading">Address: {{onePlayer.address}}</p>
+          <p class="align-left-bold-heading">Other Info: {{onePlayer.otherinfo}}</p>
+          <p class="align-left-bold-heading">Profile Pic:</p>
+          <img ng-src="{{onePlayer.profilepicurl}}" class="img-fluid rounded mb-2">
+          <p class="align-left-bold-heading">Aadhaar Pic:</p>
+          <img ng-src="{{onePlayer.acardpicurl}}" class="img-fluid rounded">
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

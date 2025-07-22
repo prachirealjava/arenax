@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>post events</title>
+    <!-- cdn for bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- cdn for jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body onload="showUser();">
+   
+
+    <div class="container mt-4 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10 border rounded-3 shadow p-4">
+                <h4 class="text-center mb-4">POST TOURNAMENTS</h4>
+
+                <form enctype="multipart/form-data" method="get" class="row g-3">
+                    <!-- Email ----------->
+
+                    <div class="col-md-6">
+                        <label>Email ID</label>
+                        <input type="email" class="form-control" id="txtEmail" name="txtEmail" readonly>
+                    </div>
+                    <div class="col-md-4"></div>
+
+                    <!-- Event Title + Date + Time -->
+                    <div class="col-md-4">
+                        <label>Event Title</label>
+                        <input type="text" class="form-control" id="txtEvent" name="txtEvent" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Date</label>
+                        <input type="date" class="form-control" id="txtDate" name="txtDate"required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Time</label>
+                        <input type="time" class="form-control" id="txtTime" name="txtTime"required>
+                    </div>
+
+
+                    <!-- Address + City -->
+                    <div class="col-md-6">
+                        <label>Address</label>
+                        <input type="text" class="form-control" id="txtAddress" name="txtAddress"required>
+                    </div>
+                    <div class="col-md-6">
+                        <label>City</label>
+                        <input type="text" class="form-control" id="txtCity" name="txtCity"required>
+                    </div>
+
+                    <!-- Sports Category + Min Age + Max Age -->
+                    <div class="col-md-6">
+                        <label>Sports Category</label>
+                        <select class="form-control" id="txtSports" name="txtSports"required>
+                            <option selected disabled>Choose Sport</option>
+                            <option>Cricket</option>
+                            <option>Football</option>
+                            <option>Basketball</option>
+                            <option>Hockey</option>
+                            <option>Badminton</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Min Age</label>
+                        <input type="number" class="form-control" id="txtMinAge" name="txtMinAge"required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Max Age</label>
+                        <input type="number" class="form-control" id="txtMaxAge" name="txtMaxAge"required>
+                    </div>
+
+                    <!-- Last Date + Fee + Prize Money -->
+                    <div class="col-md-4">
+                        <label>Last Date of Registration</label>
+                        <input type="date" class="form-control" id="txtLastDate" name="txtLastDate"required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Fee</label>
+                        <input type="number" class="form-control" id="txtFee" name="txtFee"required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label> Cash Prize </label>
+                        <input type="number" class="form-control" id="txtPrize" name="txtPrize"required>
+                    </div>
+
+                    <!-- Contact -->
+
+                    <div class="col-md-6">
+                        <label>Contact Person</label>
+                        <input type="text" class="form-control" id="txtContact" name="txtContact"required>
+                    </div>
+                        
+
+<!--  publish   button  -->
+                    <div class="col-12 d-flex justify-content-center gap-3">
+                        <div class="col-md-2">
+                            <button type="button" id="btnPublish" class="btn btn-primary w-100">Publish event</button>
+                        </div>
+                    </div>
+                       </form>
+            </div>
+
+        </div>
+<!-- // required does not works because our button type is button not submit  -->
+      
+    </div>
+    </div>
+    </div>
+
+ <script>
+//  publish button ajax using jquery    ----------------------
+  $(document).ready(function () { 
+   // console.log("page ready")
+    //when page is ready or fully loaded
+    $("#btnPublish").click(function () {
+       // console.log("button clicked")
+        //when publish button is clicked
+      let obj = {
+        type: "get",                    //using get method
+        url: "/save-tournament", // backend route to save data
+        data: {                    //collect all the form input values using jquery and store them in the data obj
+          email: $("#txtEmail").val(),            //names should be same as table(workbench)
+          event: $("#txtEvent").val(),
+          date: $("#txtDate").val(), //date of event
+          time: $("#txtTime").val(),
+          address: $("#txtAddress").val(),
+          city: $("#txtCity").val(),
+          sports: $("#txtSports").val(),
+          minAge: $("#txtMinAge").val(),
+          maxAge: $("#txtMaxAge").val(),
+          lastDate: $("#txtLastDate").val(),
+          fee: $("#txtFee").val(),
+          prize: $("#txtPrize").val(),
+          contact: $("#txtContact").val()
+        }
+      };
+
+      $.ajax(obj).then( //send request to server using obj
+        function (resp) {
+          alert(resp);
+        },
+        function (err) {
+          alert("Error: " + err.message);
+        }
+      );
+    });
+  });
+// -------------------------------------------------------------------------
+</script>
+<script>
+  function showUser(){
+    let activeUser=localStorage.getItem("activeUser");
+    document.getElementById("txtEmail").value=activeUser;
+  }
+</script>
+
+</body>
+
+</html>

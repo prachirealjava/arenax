@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="settingsApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Organizer Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    .card:hover {
+      transform: scale(1.05);
+      transition: 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+    .card-title i {
+      margin-right: 8px;
+      color: #0d6efd;
+    }
+  </style>
+</head>
+<body ng-controller="settingsCtrl" onload="showUser();">
+
+  <nav class="navbar bg-primary text-white">
+    <div class="container-fluid">
+      <div class="me-5">Welcome: <span id="welcome">*</span></div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row text-center g-4">
+      
+      <!-- Profile -->
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100">
+          <img src="pics/profile.png" class="card-img-top" height="180">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-person-circle"></i>Profile</h5>
+            <p class="card-text">You can view your profile here.</p>
+            <a href="profile-player.html" class="btn btn-primary">Profile</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events -->
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100">
+          <img src="pics/event.jpg" class="card-img-top" height="180">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-calendar-event"></i>Explore Events</h5>
+            <p class="card-text">View events posted by organizers.</p>
+            <a href="tournament-finder.html" class="btn btn-primary">Events</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100">
+          <img src="pics/setting1.png" class="card-img-top" height="180">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-gear-fill"></i>Settings</h5>
+            <p class="card-text">Manage your profile settings.</p>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#setting">Settings</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100">
+          <img src="pics/logout3" class="card-img-top" height="180">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-box-arrow-right"></i>Logout</h5>
+            <p class="card-text">Click below to log out safely.</p>
+            <a href="index.html" class="btn btn-primary" onclick="dologout()">Logout</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="setting" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Password</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control mb-2" placeholder="Email ID" ng-model="emailid">
+          <input type="password" class="form-control mb-2" placeholder="Old Password" ng-model="oldpwd">
+          <input type="password" class="form-control mb-2" placeholder="New Password" ng-model="newpwd">
+          <button class="btn btn-danger w-100" ng-click="updatePassword()">Update Password</button>
+          <div class="alert mt-2" ng-show="msg"
+               ng-class="{'alert-success': msg=='Password updated', 'alert-danger': msg=='Wrong old password'}">
+            {{msg}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+  <script>
+    var app = angular.module("settingsApp", []);
+    app.controller("settingsCtrl", function ($scope, $http) {
+      $scope.updatePassword = function () {
+        var url = "/update-pwd?emailid=" + $scope.emailid + "&oldpwd=" + $scope.oldpwd + "&newpwd=" + $scope.newpwd;
+        $http.get(url).then(function (response) {
+          $scope.msg = response.data;
+          if ($scope.msg === "Password updated") {
+            $scope.emailid = "";
+            $scope.oldpwd = "";
+            $scope.newpwd = "";
+          }
+        });
+      };
+    });
+
+    function showUser() {
+      let activeUser = localStorage.getItem("activeUser");
+      document.getElementById("welcome").innerHTML = activeUser;
+    }
+
+    function dologout() {
+      localStorage.removeItem("activeUser");
+      location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

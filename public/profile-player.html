@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Player Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & jQuery -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+   <!-- JavaScript fetch  data -->
+  <script>
+    function showPrev(fileRef, prevRef) {
+      const [file] = fileRef.files;
+      if (file) {
+        prevRef.src = URL.createObjectURL(file);
+      }
+    }
+
+    $(document).ready(function () {
+      $("#btnGet").click(function () {
+        let obj = {
+          type: "get",
+          url: "/fetch-player",
+          data: { emailid: $("#txtEmail").val() }
+        };
+
+        $.ajax(obj).then(function (responseJsonAry) {
+          if (responseJsonAry.length == 0) {
+            alert("No Record Found");
+          } else {
+            let name = responseJsonAry[0].name;
+            let dob = responseJsonAry[0].dob;       // use split function     
+            let gender = responseJsonAry[0].gender;
+
+            let address = responseJsonAry[0].address;
+            let contact = responseJsonAry[0].contact;
+            let game = responseJsonAry[0].game;
+            let otherinfo = responseJsonAry[0].otherinfo;
+            let acardpicurl = responseJsonAry[0].acardpicurl;
+            let profilepicurl = responseJsonAry[0].profilepicurl;
+
+            $("#txtName").val(name);
+            $("#txtDob").val(dob);
+            $("#txtGender").val(gender);
+
+            $("#txtAddress").val(address);
+            $("#txtContact").val(contact);
+            $("#txtGames").val(game);
+            $("#txtOther").val(otherinfo);
+            $("#prevAdhaar").prop("src", acardpicurl);
+            $("#prevProfile").prop("src", profilepicurl);
+            $("#hdn").val(acardpicurl);
+            $("#hdn2").val(profilepicurl);
+
+
+          }
+        }).fail(function (err) {
+         // console.log(err); 
+          alert(err.message);
+        });
+      });
+    });
+  </script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .main-box {
+      margin-top: 30px;
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .img-thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body onload="showUser();">
+  <div class="container d-flex justify-content-center">
+    <form class="col-md-10 main-box" enctype="multipart/form-data" method="post">
+      <h4 class="text-center text-primary mb-4">Player Profile</h4>
+      <input type="hidden" id="hdn" name="hdn">
+      <input type="hidden" id="hdn2" name="hdn2">
+
+
+      <!-- Email + Get -->
+      <div class="row mb-3">
+        <div class="col-md-8">
+          <label class="text-primary">Email ID</label>
+          <input type="email" class="form-control" id="txtEmail" name="txtEmail" readonly>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button type="button" class="btn btn-primary w-100" id="btnGet">Get Data</button>
+        </div>
+      </div>
+
+      <!-- Name + DOB -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-primary">Player Name</label>
+          <input type="text" class="form-control" id="txtName" name="txtName" >
+        </div>
+        <div class="col-md-6">
+          <label class="text-primary">Date of Birth</label>
+          <input type="date" class="form-control" id="txtDob" name="txtDob" >
+        </div>
+      </div>
+
+      <!-- Gender + Info -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-primary">Gender</label>
+          <select class="form-select" id="txtGender" name="txtGender">
+            <option value="">Choose...</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+        </div>
+      </div>
+
+      <!-- Aadhaar + Profile Upload -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-primary">Aadhaar Card (Front)</label>
+          <input type="file" class="form-control" id="adhaarPic" name="adhaarPic"
+            onchange="showPrev(adhaarPic, prevAdhaar);"required>
+        </div>
+        <div class="col-md-6">
+          <label class="text-primary">Profile Picture</label>
+          <input type="file" class="form-control" id="profilePic" name="profilePic"
+            onchange="showPrev(profilePic, prevProfile);"required>
+        </div>
+      </div>
+
+      <!-- Image Preview -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-primary">Aadhaar Preview</label><br>
+          <img id="prevAdhaar" src="" class="img-thumbnail mt-2" name="prevAdhaar" />
+        </div>
+        <div class="col-md-6">
+          <label class="text-primary">Profile Preview</label><br>
+          <img id="prevProfile" name="prevProfile" src="" class="img-thumbnail mt-2" />
+        </div>
+      </div>
+
+      <!-- Address + Contact -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-primary">Address</label>
+          <input type="text" class="form-control" id="txtAddress" name="txtAddress"required>
+        </div>
+        <div class="col-md-6">
+          <label class="text-primary">Contact Number</label>
+          <input type="text" class="form-control" id="txtContact" name="txtContact"required>
+        </div>
+      </div>
+
+      <!-- Games + Other Info -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-primary">Games You Play</label>
+          <input type="text" class="form-control" id="txtGames" name="txtGames"required>
+        </div>
+        <div class="col-md-6">
+          <label class="text-primary">Other Info</label>
+          <textarea class="form-control" id="txtOther" name="txtOther" rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="text-center mt-3 d-flex justify-content-center gap-3">
+        <button type="submit" class="btn btn-primary" formaction="/save-player">Upload Data</button>
+        <button type="submit" class="btn btn-warning" formaction="/update-player">Modify</button>
+      </div>
+    </form>
+  </div>
+
+ <script>
+  function showUser(){
+    let activeUser=localStorage.getItem("activeUser");
+    document.getElementById("txtEmail").value=activeUser;
+  }
+</script>
+
+</body>
+
+</html>
