@@ -74,12 +74,15 @@ cloudinary.config({
 //--------------------------------AIven started---------------------------
 let dbConfig = "mysql://avnadmin:AVNS_lnEqQrU7oO75nnAbLTY@mysql-2a0f2a12-bansalprachi908-3c97.c.aivencloud.com:27907/defaultdb";
 let mySqlVen = mysql2.createConnection(dbConfig);
-mySqlVen.connect(function (errKuch) {
-    if (errKuch == null)
-        console.log("AiVen Connected Successfulllyyy!!!!");
-    else
-        console.log(errKuch.message)
-})
+
+mysql2.createPool(dbConfig);
+console.log("aiven connected successfully");
+// mySqlVen.connect(function (errKuch) {
+//     if (errKuch == null)
+//         console.log("AiVen Connected Successfulllyyy!!!!");
+//     else
+//         console.log(errKuch.message)
+// })
 //    ------------------------------------index started-----------------------------------
 //    signup backend---------------------------------------
 app.get("/get-one", function (req, resp) {
