@@ -50,6 +50,7 @@
 
       $scope.fetchTournaments = function () {
         var url = "/fetch-tournaments?email="+localStorage.getItem("activeUser");
+        
         $scope.emailInput;
         $http.get(url).then(allGoodFx, someBadFx);
 
