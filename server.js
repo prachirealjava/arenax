@@ -3,19 +3,6 @@ var fileuploader = require("express-fileupload");
 var cloudinary = require("cloudinary").v2;
 var mysql2 = require("mysql2");
 
-var express = require("express");
-var app = express(); // CREATE APP FIRST
-
-
-// Middleware
-app.use(express.static("public"));
-app.use(fileuploader());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-
-
-
 
 var app = express();//app() returns an Object:app
 
@@ -25,8 +12,9 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI("AIzaSyB4GYmU685Je_DO12W9gXrXNt3KORJpIEk");
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
+app.use(express.urlencoded({ extended: true }));
 
-app.use(fileuploader());//for receiving files from client and save on server files
+//app.use(fileuploader());//for receiving files from client and save on server files
 
 //AI Connection start
 
@@ -113,7 +101,6 @@ app.get("/get-one", function (req, resp) {
 });
 
 // login------------------------------------------
-
 app.get("/do-login", function (req, resp) {
     let email = req.query.emailid;
     let pwd = req.query.pwd;
