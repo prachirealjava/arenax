@@ -100,23 +100,37 @@ app.get("/get-one", function (req, resp) {
 });
 
 // login------------------------------------------
-app.get("/do-login", function (req, resp) {
+// app.get("/do-login", function (req, resp) {
     let email = req.query.emailid;
     let pwd = req.query.pwd;
 
-    mySqlVen.query("SELECT * FROM user WHERE emailid=? AND pwd=?", [email, pwd], function (errKuch, allRecords) {
-     if (allRecords.length == 0) {
-        resp.send("Invalid");
-    }
-    else if (allRecords[0].status == 1) {
-    
-        resp.send(allRecords[0].usertype);
-    }
-    else {
-        
-        resp.send("Blocked"); 
-    }
-});
+    mySqlVen.query(
+        "SELECT * FROM user WHERE emailid=? AND pwd=?",
+        [email, pwd],
+        function (errKuch, allRecords) {
+
+            // 🔥 FIX 1: Handle MySQL error
+            if (errKuch) {
+                console.log("MySQL Error:", errKuch);
+                resp.send("Server Error");
+                return;
+            }
+
+            // 🔥 FIX 2: allRecords may be undefined
+            if (!allRecords || allRecords.length === 0) {
+                resp.send("Invalid");
+                return;
+            }
+
+            // SUCCESS LOGIN
+            if (allRecords[0].status == 1) {
+                resp.send(allRecords[0].usertype);
+            } 
+            else {
+                resp.send("Blocked");
+            }
+        }
+    );
 
 
 //       mySqlVen.query("select * from user where emailid=? and pwd=?", [email, pwd], function (errKuch, allRecords) {
@@ -134,7 +148,7 @@ app.get("/do-login", function (req, resp) {
 //         }
     
 //  });
- });
+ 
 //                     index ends---------------------
 //    --------------------------------------------------------------------------------------------
 //                    org details started--------------------------
