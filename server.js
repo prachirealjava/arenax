@@ -105,53 +105,19 @@ app.get("/do-login", function (req, resp) {
     let email = req.query.emailid;
     let pwd = req.query.pwd;
 
-    mySqlVen.query(
-        "SELECT * FROM user WHERE emailid=? AND pwd=?",
-        [email, pwd],
-        function (errKuch, allRecords) {
-
-            // Handle SQL errors first
-            if (errKuch) {
-                console.log("MySQL Error:", errKuch);
-                return resp.status(500).send("Internal Server Error");
-            }
-
-            // No record found
-            if (!allRecords || allRecords.length === 0) {
-                return resp.send("Invalid");
-            }
-
-            // Check user status
-            if (allRecords[0].status == 1) {
-                return resp.send(allRecords[0].usertype);
-            } else {
-                return resp.send("Blocked");
-            }
-        }
-    );
-});
-
-
-
-
-
-// app.get("/do-login", function (req, resp) {
-//     let email = req.query.emailid;
-//     let pwd = req.query.pwd;
-
-//     mySqlVen.query("SELECT * FROM user WHERE emailid=? AND pwd=?", [email, pwd], function (errKuch, allRecords) {
-//      if (allRecords.length == 0) {
-//         resp.send("Invalid");
-//     }
-//     else if (allRecords[0].status == 1) {
+    mySqlVen.query("SELECT * FROM user WHERE emailid=? AND pwd=?", [email, pwd], function (errKuch, allRecords) {
+     if (allRecords.length == 0) {
+        resp.send("Invalid");
+    }
+    else if (allRecords[0].status == 1) {
     
-//         resp.send(allRecords[0].usertype);
-//     }
-//     else {
+        resp.send(allRecords[0].usertype);
+    }
+    else {
         
-//         resp.send("Blocked"); 
-//     }
-// });
+        resp.send("Blocked"); 
+    }
+});
 
 
 //       mySqlVen.query("select * from user where emailid=? and pwd=?", [email, pwd], function (errKuch, allRecords) {
@@ -169,7 +135,7 @@ app.get("/do-login", function (req, resp) {
 //         }
     
 //  });
- 
+ });
 //                     index ends---------------------
 //    --------------------------------------------------------------------------------------------
 //                    org details started--------------------------
