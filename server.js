@@ -9,7 +9,7 @@ var app = express();//app() returns an Object:app
 //AI Started to run gemini
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenerativeAI("AIzaSyB4GYmU685Je_DO12W9gXrXNt3KORJpIEk");
+const genAI = new GoogleGenerativeAI("AIzaSyALUFMaexKi3-5SIDgObjANlsI01QbJ7zA");
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 app.use(express.urlencoded({ extended: true }));
@@ -64,6 +64,14 @@ app.get("/",function(req,resp)
     let path=__dirname+"/public/index.html";
     resp.sendFile(path);
 })
+
+app.get("/play",function(req,resp)
+{
+
+    let path=__dirname+"/public/profile-player.html";
+    resp.sendFile(path);
+})
+
 
 app.use(express.urlencoded(true)); //convert POST data to JSON object
 
