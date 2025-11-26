@@ -100,6 +100,7 @@ app.get("/get-one", function (req, resp) {
 });
 
 // login------------------------------------------
+
 app.get("/do-login", function (req, resp) {
     let email = req.query.emailid;
     let pwd = req.query.pwd;
@@ -109,30 +110,26 @@ app.get("/do-login", function (req, resp) {
         [email, pwd],
         function (errKuch, allRecords) {
 
-            // 🔥 FIX 1: Handle MySQL error
+            // Handle SQL errors first
             if (errKuch) {
                 console.log("MySQL Error:", errKuch);
-                resp.send("Server Error");
-                return;
+                return resp.status(500).send("Internal Server Error");
             }
 
-            // 🔥 FIX 2: allRecords may be undefined
+            // No record found
             if (!allRecords || allRecords.length === 0) {
-                resp.send("Invalid");
-                return;
+                return resp.send("Invalid");
             }
 
-            // SUCCESS LOGIN
+            // Check user status
             if (allRecords[0].status == 1) {
-                resp.send(allRecords[0].usertype);
-            } 
-            else {
-                resp.send("Blocked");
+                return resp.send(allRecords[0].usertype);
+            } else {
+                return resp.send("Blocked");
             }
         }
     );
 });
-
 
 
 
