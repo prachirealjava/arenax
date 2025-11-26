@@ -14,7 +14,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 app.use(express.urlencoded({ extended: true }));
 
-//app.use(fileuploader());//for receiving files from client and save on server files
+app.use(fileuploader());//for receiving files from client and save on server files
 
 //AI Connection start
 
