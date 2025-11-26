@@ -3,6 +3,19 @@ var fileuploader = require("express-fileupload");
 var cloudinary = require("cloudinary").v2;
 var mysql2 = require("mysql2");
 
+var express = require("express");
+var app = express(); // CREATE APP FIRST
+
+
+// Middleware
+app.use(express.static("public"));
+app.use(fileuploader());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
+
+
 
 var app = express();//app() returns an Object:app
 
