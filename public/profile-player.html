@@ -22,7 +22,7 @@
     $(document).ready(function () {
       $("#btnGet").click(function () {
         let obj = {
-          type: "post",
+          type: "get",
           url: "/fetch-player",
           data: { emailid: $("#txtEmail").val() }
         };
